@@ -104,5 +104,6 @@ public class LonelyTwitterActivity extends Activity {
     public void clearTweets(View view){
         tweets.clear();
         saveInFile();
+        adapter.notifyDataSetChanged();
     }
 }
