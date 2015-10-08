@@ -9,20 +9,22 @@ import java.util.List;
 /**
  * Created by mstrong on 9/30/15.
  */
-public class TweetList {
-    private ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-    public void add(Tweet tweet){
+public class TweetList implements MyObservable {
+    private ArrayList<Tweet> tweets = new ArrayList<Tweet>();//model
+    private ArrayList<MyObserver> myObservers = new ArrayList<MyObserver>();//model
+    public void add(Tweet tweet){//controller
         if (this.tweets.contains(tweet)){
             throw new IllegalArgumentException();
         }
         else {
             this.tweets.add(tweet);
         }
+        notifyObservers();
     }
-    public void delete(Tweet tweet){
+    public void delete(Tweet tweet){//controller
         this.tweets.remove(tweet);
     }
-    public boolean hasTweet(Tweet tweet){
+    public boolean hasTweet(Tweet tweet){//
         return tweets.contains(tweet);
     }
     public Tweet getTweet(int i){
@@ -42,5 +44,14 @@ public class TweetList {
             }
         });
         return sortTweets;
+    }
+
+    public void addObserver(MyObserver o) {
+        myObservers.add(o);
+    }
+    public void notifyObservers(){
+        for (MyObserver observer : myObservers){
+            observer.myNotify();
+        }
     }
 }

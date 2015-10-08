@@ -11,7 +11,14 @@ import java.util.Date;
 /**
  * Created by mstrong on 9/30/15.
  */
-public class TweetListTest extends ActivityInstrumentationTestCase2 {
+public class TweetListTest extends ActivityInstrumentationTestCase2 implements MyObserver{
+
+    private boolean wasNotified = false;
+
+    public void myNotify()
+    {
+        wasNotified = true;
+    }
 
     public TweetListTest() {
         super(LonelyTwitterActivity.class);
@@ -75,5 +82,21 @@ public class TweetListTest extends ActivityInstrumentationTestCase2 {
         ArrayList<Tweet> testList = tweetList.getTweets();
         assertTrue(testList.get(1)==tweet);
         assertTrue(testList.get(0)==tweet2);
+    }
+
+    public void testGetTweetType(){
+
+    }
+
+
+
+    public void testTweetListChanged() {
+        TweetList tweetList = new TweetList();
+        Tweet tweet = new NormalTweet("hihi");
+        tweetList.addObserver(this);
+        wasNotified = false;
+        assertFalse(wasNotified);
+        tweetList.add(tweet);
+        assertTrue(wasNotified);
     }
 }
