@@ -14,8 +14,10 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,9 +29,35 @@ import com.google.gson.reflect.TypeToken;
 public class LonelyTwitterActivity extends Activity {
 
 	private static final String FILENAME = "file.sav";//model
+	private LonelyTwitterActivity activity = this;//copy to use later for tests
+
+	public Button getSaveButton() {
+		return saveButton;
+	}
+
+	private Button saveButton;
+
+	public LonelyTwitterActivity() {
+	}
+
+
+	public EditText getBodyText() {
+		return bodyText;
+	}
+
 	private EditText bodyText;//controller
+
+	public ListView getOldTweetsList() {
+		return oldTweetsList;
+	}
+
 	private ListView oldTweetsList;//View
     private ArrayAdapter<Tweet> adapter;//model
+
+	public ArrayList<Tweet> getTweets() {
+		return tweets;
+	}
+
 	private ArrayList<Tweet> tweets = new ArrayList<Tweet>();//model
 
 	/** Called when the activity is first created. */
@@ -38,9 +66,10 @@ public class LonelyTwitterActivity extends Activity {
 
 		super.onCreate(savedInstanceState);//model
 		setContentView(R.layout.main);//view
+		saveButton = (Button) findViewById(R.id.save);
 
 		bodyText = (EditText) findViewById(R.id.body);//controller
-		Button saveButton = (Button) findViewById(R.id.save);//controller
+
 		oldTweetsList = (ListView) findViewById(R.id.oldTweetsList);//model
 
 		saveButton.setOnClickListener(new View.OnClickListener() {
@@ -48,9 +77,16 @@ public class LonelyTwitterActivity extends Activity {
 			public void onClick(View v) {
 				setResult(RESULT_OK);//controller
 				String text = bodyText.getText().toString();//view
-                tweets.add(new NormalTweet(text));//controller
+				tweets.add(new NormalTweet(text));//controller
 				saveInFile();//controller
-                adapter.notifyDataSetChanged();//controller
+				adapter.notifyDataSetChanged();//controller
+			}
+		});
+
+		oldTweetsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(activity, EditTweetActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
